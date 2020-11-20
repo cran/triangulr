@@ -1,10 +1,12 @@
 #include <Rcpp.h>
-using namespace Rcpp;
+
+using Rcpp::NumericVector;
+using Rcpp::warning;
 
 // [[Rcpp::export]]
 NumericVector MGTriC(
-    NumericVector t, double min, double max, double mode
-) {
+    NumericVector t, double min, double max, double mode)
+{
   int n = t.size();
 
   if (min >= max || mode >= max || min >= mode)
@@ -25,10 +27,9 @@ NumericVector MGTriC(
     }
     else
     {
-      m[i] = 2.0 * ((max - mode) * exp(min * t[i]) - (max - min) *
-        exp(mode * t[i]) + (mode - min) * exp(max * t[i])) /
-          ((max - min) * (mode - min) * (max - mode) *
-            pow(t[i], 2));
+      m[i] = 2.0 * ((max - mode) * exp(min * t[i]) - (max - min) * exp(mode * t[i]) + (mode - min) * exp(max * t[i])) /
+             ((max - min) * (mode - min) * (max - mode) *
+              pow(t[i], 2));
     }
   }
 
@@ -42,8 +43,8 @@ NumericVector MGTriC(
 
 // [[Rcpp::export]]
 NumericVector MGTriC2(
-    NumericVector t, NumericVector min, NumericVector max, NumericVector mode
-) {
+    NumericVector t, NumericVector min, NumericVector max, NumericVector mode)
+{
   int n = t.size();
   bool has_nan = false;
   NumericVector m(n);
@@ -58,11 +59,9 @@ NumericVector MGTriC2(
     }
     else
     {
-      m[i] = 2.0 * ((max[i] - mode[i]) * exp(min[i] * t[i]) -
-        (max[i] - min[i]) * exp(mode[i] * t[i]) + (mode[i] - min[i]) *
-        exp(max[i] * t[i])) /
-          ((max[i] - min[i]) * (mode[i] - min[i]) * (max[i] - mode[i]) *
-            pow(t[i], 2));
+      m[i] = 2.0 * ((max[i] - mode[i]) * exp(min[i] * t[i]) - (max[i] - min[i]) * exp(mode[i] * t[i]) + (mode[i] - min[i]) * exp(max[i] * t[i])) /
+             ((max[i] - min[i]) * (mode[i] - min[i]) * (max[i] - mode[i]) *
+              pow(t[i], 2));
     }
   }
 
@@ -73,7 +72,3 @@ NumericVector MGTriC2(
 
   return m;
 }
-
-/*** R
-
-*/

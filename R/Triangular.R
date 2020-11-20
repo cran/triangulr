@@ -23,7 +23,10 @@
 #' @param log,log_p Logical; if \code{TRUE}, probabilities \code{p} are given as
 #'  \code{log(p)}.
 #' @param lower_tail Logical; if \code{TRUE} (default), probabilities \code{p}
-#' are \eqn{P[X \le x]}, otherwise, \eqn{P[X > x]}.
+#'  are \eqn{P[X \le x]}, otherwise, \eqn{P[X > x]}.
+#' @param dqrng Logical; if \code{FALSE} (default), \code{\link{runif}} will be
+#'  used to generate random numbers instead of \code{\link{dqrunif}} from the
+#'  \code{\link{dqrng}} package.
 #'
 #' @details
 #'  If \code{min}, \code{max}, or \code{mode} are not specified they assume the
@@ -81,19 +84,40 @@
 #'
 #' # min, max, and mode with lengths equal to the length of x
 #' x <- c(0, 0.5, 1)
-#' d <- dtri(x, min = c(0, 0, 0), max = c(1, 1, 1), mode = c(0.5, 0.5, 0.5))
+#' d <- dtri(x,
+#'           min = c(0, 0, 0),
+#'           max = c(1, 1, 1),
+#'           mode = c(0.5, 0.5, 0.5))
 #' # min and max will be recycled to the length of x
-#' rec_d <- dtri(x, min = 0, max = 1, mode = c(0.5, 0.5, 0.5))
+#' rec_d <- dtri(x,
+#'               min = 0,
+#'               max = 1,
+#'               mode = c(0.5, 0.5, 0.5))
 #' all.equal(d, rec_d)
 #'
 #' # min, max, and mode with lengths equal to the length of x
 #' n <- 3
 #' set.seed(1)
-#' r <- rtri(n, min = c(0, 0, 0), max = c(1, 1, 1), mode = c(0.5, 0.5, 0.5))
+#' r <- rtri(n,
+#'           min = c(0, 0, 0),
+#'           max = c(1, 1, 1),
+#'           mode = c(0.5, 0.5, 0.5))
 #' # min and max will be recycled to the length of n
 #' set.seed(1)
-#' rec_r <- rtri(n, min = 0, max = 1, mode = c(0.5, 0.5, 0.5))
+#' rec_r <- rtri(n,
+#'               min = 0,
+#'               max = 1,
+#'               mode = c(0.5, 0.5, 0.5))
 #' all.equal(r, rec_r)
+#'
+#' dqrng::dqset.seed(1)
+#' r <- rtri(
+#'   n,
+#'   min = 0,
+#'   max = 1,
+#'   mode = 0.5,
+#'   dqrng = TRUE
+#' )
 #'
 #' # Log quantiles
 #' x <- c(0, 0.5, 1)

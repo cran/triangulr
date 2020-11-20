@@ -1,12 +1,14 @@
 #include <Rcpp.h>
 
-using namespace Rcpp;
+using Rcpp::log;
+using Rcpp::NumericVector;
+using Rcpp::warning;
 
 // [[Rcpp::export]]
 NumericVector PTriC(
     NumericVector q, double min, double max, double mode, bool lower_tail,
-    bool log_p
-) {
+    bool log_p)
+{
   int n = q.size();
 
   if (min >= max || mode > max || min > mode)
@@ -43,7 +45,7 @@ NumericVector PTriC(
 
   if (log_p)
   {
-    p = Rcpp::log(p);
+    p = log(p);
   }
 
   return p;
@@ -52,8 +54,8 @@ NumericVector PTriC(
 // [[Rcpp::export]]
 NumericVector PTriC2(
     NumericVector q, NumericVector min, NumericVector max, NumericVector mode,
-    bool lower_tail, bool log_p
-) {
+    bool lower_tail, bool log_p)
+{
   int n = q.size();
   bool has_nan = false;
   NumericVector p(n);
@@ -76,7 +78,7 @@ NumericVector PTriC2(
     else if (mode[i] < q[i] && q[i] < max[i])
     {
       p[i] = 1.0 - pow((max[i] - q[i]), 2) /
-        ((max[i] - min[i]) * (max[i] - mode[i]));
+                       ((max[i] - min[i]) * (max[i] - mode[i]));
     }
     else // if (max[i] <= q[i])
     {
@@ -91,7 +93,7 @@ NumericVector PTriC2(
 
   if (log_p)
   {
-    p = Rcpp::log(p);
+    p = log(p);
   }
 
   if (has_nan)
@@ -101,7 +103,3 @@ NumericVector PTriC2(
 
   return p;
 }
-
-/*** R
-
-*/
