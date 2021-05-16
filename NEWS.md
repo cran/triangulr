@@ -1,3 +1,9 @@
+# `triangulr` 1.2.0
+
+- Replaced Rcpp dependency in favor of cpp11.
+- Removed dqrng dependency.
+- Refactored distribution functions.
+
 # `triangulr` 1.1.0
 
 - Updated `rtri` to use less memory.

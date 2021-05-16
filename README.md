@@ -5,11 +5,12 @@
 
 [![Build](https://github.com/irkaal/triangulr/workflows/R-CMD-check/badge.svg)](https://github.com/irkaal/triangulr/actions)
 [![Codecov](https://codecov.io/gh/irkaal/triangulr/branch/master/graph/badge.svg)](https://codecov.io/gh/irkaal/triangulr?branch=master)
-[![CRAN](http://www.r-pkg.org/badges/version/triangulr)](https://cran.r-project.org/package=triangulr)
-[![Downloads](http://cranlogs.r-pkg.org/badges/triangulr)](https://cran.r-project.org/package=triangulr)
+[![CRAN](https://www.r-pkg.org/badges/version/triangulr)](https://cran.r-project.org/package=triangulr)
+[![Downloads](https://cranlogs.r-pkg.org/badges/triangulr)](https://cran.r-project.org/package=triangulr)
 [![Downloads
-Overall](http://cranlogs.r-pkg.org/badges/grand-total/triangulr)](https://cran.r-project.org/package=triangulr)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+Overall](https://cranlogs.r-pkg.org/badges/grand-total/triangulr)](https://cran.r-project.org/package=triangulr)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 
 ## Introduction
 
@@ -119,16 +120,6 @@ rtri(n,
      max = 1,
      mode = 0.5)
 #> [1] 0.3643547 0.4313490 0.5378601
-
-dqrng::dqset.seed(1)
-rtri(
-  n,
-  min = c(0, 0, 0),
-  max = 1,
-  mode = 0.5,
-  dqrng = TRUE
-)
-#> [1] 0.3951856 0.8516496 0.4494472
 ```
 
 Using the moment generating function,
@@ -148,25 +139,6 @@ mgtri(t,
       max = 1,
       mode = 0.5)
 #> [1] 1.683357 2.952492 5.387626
-```
-
-Using the characteristic function,
-[`ctri()`](https://irkaal.github.io/triangulr/reference/Triangular.html).
-
-``` r
-t <- c(1, 2, 3)
-
-ctri(t,
-     min = 0,
-     max = 1,
-     mode = 0.5)
-#> [1] 0.8594513+0.4695204i 0.4967514+0.7736445i 0.0584297+0.8239422i
-
-ctri(t,
-     min = c(0, 0, 0),
-     max = 1,
-     mode = 0.5)
-#> [1] 0.8594513+0.4695204i 0.4967514+0.7736445i 0.0584297+0.8239422i
 ```
 
 Using the expected shortfall function,

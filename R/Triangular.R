@@ -4,11 +4,10 @@
 #'
 #' @description These functions provide information about the triangular
 #'  distribution on the interval from \code{min} to \code{max} with mode equal
-#'  to \code{mode}. \code{ctri} gives the characteristic function, \code{dtri}
-#'  gives the density function, \code{estri} gives the expected shortfall,
-#'  \code{mgtri} gives the moment generating function, \code{ptri} gives the
-#'  distribution function, \code{qtri} gives the quantile function, and
-#'  \code{rtri} gives the random variate generator.
+#'  to \code{mode}. \code{dtri} gives the density function, \code{estri} gives
+#'  the expected shortfall, \code{mgtri} gives the moment generating function,
+#'  \code{ptri} gives the distribution function, \code{qtri} gives the quantile
+#'  function, and \code{rtri} gives the random variate generator.
 #'
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
@@ -24,9 +23,6 @@
 #'  \code{log(p)}.
 #' @param lower_tail Logical; if \code{TRUE} (default), probabilities \code{p}
 #'  are \eqn{P[X \le x]}, otherwise, \eqn{P[X > x]}.
-#' @param dqrng Logical; if \code{FALSE} (default), \code{\link{runif}} will be
-#'  used to generate random numbers instead of \code{\link{dqrunif}} from the
-#'  \code{\link{dqrng}} package.
 #'
 #' @details
 #'  If \code{min}, \code{max}, or \code{mode} are not specified they assume the
@@ -47,7 +43,6 @@
 #'  the default arguments.
 #'
 #' @return
-#'  \code{ctri} gives the characteristic function,
 #'  \code{dtri} gives the density function,
 #'  \code{estri} gives the expected shortfall,
 #'  \code{mgtri} gives the moment generating function,
@@ -56,10 +51,10 @@
 #'  \code{rtri} gives the random variate generator.
 #'
 #'  The numerical arguments other than \code{n} with values of size one are
-#'  recycled to the length of \code{t} for \code{ctri} and \code{mgtri}, the
-#'  length of \code{x} for \code{dtri}, the length of \code{p} for \code{estri}
-#'  and \code{qtri}, the length of \code{q} for \code{ptri}, and \code{n} for
-#'  \code{rtri}. This determines the length of the result.
+#'  recycled to the length of \code{t} for \code{mgtri}, the length of \code{x}
+#'  for \code{dtri}, the length of \code{p} for \code{estri} and \code{qtri},
+#'  the length of \code{q} for \code{ptri}, and \code{n} for \code{rtri}. This
+#'  determines the length of the result.
 #'
 #'  The logical arguments \code{log}, \code{lower_tail}, and \code{log_p} must
 #'  be of length one each.
@@ -74,9 +69,8 @@
 #'
 #'  \link{Distributions} for other standard distributions.
 #'
-#' @useDynLib triangulr
+#' @useDynLib triangulr, .registration = TRUE
 #'
-#' @importFrom Rcpp sourceCpp
 #' @importFrom rlang cnd_signal
 #' @importFrom vctrs vec_recycle_common
 #'
@@ -110,15 +104,6 @@
 #'               mode = c(0.5, 0.5, 0.5))
 #' all.equal(r, rec_r)
 #'
-#' dqrng::dqset.seed(1)
-#' r <- rtri(
-#'   n,
-#'   min = 0,
-#'   max = 1,
-#'   mode = 0.5,
-#'   dqrng = TRUE
-#' )
-#'
 #' # Log quantiles
 #' x <- c(0, 0.5, 1)
 #' log_d <- dtri(x, log = TRUE)
@@ -142,7 +127,6 @@
 #' upper_q <- ptri(1 - p, lower_tail = FALSE)
 #' q <- ptri(p, lower_tail = TRUE)
 #' all.equal(upper_q, q)
-#'
 #' p <- c(0, 0.5, 1)
 #' log_q <- qtri(log(p), log_p = TRUE)
 #' q <- qtri(p, log_p = FALSE)
@@ -152,12 +136,107 @@
 #' t <- c(1, 2, 3)
 #' mgtri(t)
 #'
-#' # Characteristic function
-#' t <- c(1, 2, 3)
-#' ctri(t)
-#'
 #' # Expected Shortfall
 #' p <- c(0.1, 0.5, 1)
 #' estri(p)
 #'
 NULL
+
+#' @rdname Triangular
+#' @export
+dtri <- function(x,
+                 min = 0,
+                 max = 1,
+                 mode = 0.5,
+                 log = FALSE) {
+  check_numeric(x, min, max, mode)
+  check_scalar_lgl(log)
+  is_scalar_params <- is_scalar(min, max, mode)
+  if (!is_scalar_params) {
+    try_recycle(x, min, max, mode)
+  }
+  dtri_cpp(x, min, max, mode, log, is_scalar_params)
+}
+
+#' @rdname Triangular
+#' @export
+ptri <- function(q,
+                 min = 0,
+                 max = 1,
+                 mode = 0.5,
+                 lower_tail = TRUE,
+                 log_p = FALSE) {
+  check_numeric(q, min, max, mode)
+  check_scalar_lgl(lower_tail, log_p)
+  is_scalar_params <- is_scalar(min, max, mode)
+  if (!is_scalar_params) {
+    try_recycle(q, min, max, mode)
+  }
+  ptri_cpp(q, min, max, mode, lower_tail, log_p, is_scalar_params)
+}
+
+#' @rdname Triangular
+#' @export
+qtri <- function(p,
+                 min = 0,
+                 max = 1,
+                 mode = 0.5,
+                 lower_tail = TRUE,
+                 log_p = FALSE) {
+  check_numeric(p, min, max, mode)
+  check_scalar_lgl(lower_tail, log_p)
+  is_scalar_params <- is_scalar(min, max, mode)
+  if (!is_scalar_params) {
+    try_recycle(p, min, max, mode)
+  }
+  qtri_cpp(p, min, max, mode, lower_tail, log_p, is_scalar_params)
+}
+
+#' @rdname Triangular
+#' @export
+rtri <- function(n,
+                 min = 0,
+                 max = 1,
+                 mode = 0.5) {
+  check_numeric(n, min, max, mode)
+  if (length(n) != 1 || n < 1) {
+    cnd_signal(tri_error_n(n))
+  }
+  n <- as.integer(n)
+  is_scalar_params <- is_scalar(min, max, mode)
+  if (!is_scalar_params) {
+    try_recycle(n, min, max, mode, .f = c)
+  }
+  rtri_cpp(n, min, max, mode, is_scalar_params)
+}
+
+#' @rdname Triangular
+#' @export
+mgtri <- function(t,
+                  min = 0,
+                  max = 1,
+                  mode = 0.5) {
+  check_numeric(t, min, max, mode)
+  is_scalar_params <- is_scalar(min, max, mode)
+  if (!is_scalar_params) {
+    try_recycle(t, min, max, mode)
+  }
+  mgtri_cpp(t, min, max, mode, is_scalar_params)
+}
+
+#' @rdname Triangular
+#' @export
+estri <- function(p,
+                  min = 0,
+                  max = 1,
+                  mode = 0.5,
+                  lower_tail = TRUE,
+                  log_p = FALSE) {
+  check_numeric(p, min, max, mode)
+  check_scalar_lgl(lower_tail, log_p)
+  is_scalar_params <- is_scalar(min, max, mode)
+  if (!is_scalar_params) {
+    try_recycle(p, min, max, mode)
+  }
+  estri_cpp(p, min, max, mode, lower_tail, log_p, is_scalar_params)
+}
